@@ -14,6 +14,10 @@ package
 	import components.ThumbsPad;
 	
 	import flash.desktop.NativeApplication;
+	import flash.display.GradientType;
+	import flash.display.Graphics;
+	import flash.geom.Matrix;
+	import flash.display.SpreadMethod;
 	import flash.display.Sprite;
 	import flash.display.StageAlign;
 	import flash.display.StageScaleMode;
@@ -67,17 +71,18 @@ package
 			var basePad:BasePad = new BasePad();
 			
 			var tivoButton_width:int = (5 * BUTTON_WIDTH) + (5 * PADDING );
-
+			drawBG();
 			
 			tivoButton = basePad.getLabelButton("Tivo",0, 10,14,tivoButton_width);
 			tivoButton.x = centerLine - tivoButton.width/2;
 			tivoButton.addEventListener(MouseEvent.CLICK, tivo_clickHandler);
 						addChild(tivoButton);
 			
+			
+			
+			
+			
 			drawArrowPad();
-			
-			
-			
 			
 			drawPlayControlPad();
 			drawNumPad();
@@ -211,6 +216,36 @@ package
 			numpad.addEventListener("c", clear_clickHandler);
 			addChild(numpad);
 		}
+		
+		private function drawBG():void{
+			/****************************
+			 Define Variables
+			 ****************************/
+			//Type of Gradient we will be using
+			var fType:String = GradientType.LINEAR;
+			//Colors of our gradient in the form of an array
+			var colors:Array = [0x555555, 0x222222 ];
+			//Store the Alpha Values in the form of an array
+			var alphas:Array = [ 1, 1 ];
+			//Array of color distribution ratios.  
+			//The value defines percentage of the width where the color is sampled at 100%
+			var ratios:Array = [ 0, 255 ];
+			//Create a Matrix instance and assign the Gradient Box
+			var matr:Matrix = new Matrix();
+			matr.createGradientBox( stage.fullScreenWidth,  stage.fullScreenHeight, Math.PI/2, 0,0);
+			//SpreadMethod will define how the gradient is spread. Note!!! Flash uses CONSTANTS to represent String literals
+			var sprMethod:String = SpreadMethod.PAD;
+			//Start the Gradietn and pass our variables to it
+			var sprite:Sprite = new Sprite();
+			//Save typing + increase performance through local reference to a Graphics object
+			var g:Graphics = sprite.graphics;
+			g.beginGradientFill( fType, colors, alphas, ratios, matr, sprMethod );
+			g.drawRect( 0, 0, stage.fullScreenWidth, stage.fullScreenHeight );
+			
+			addChild( sprite );
+			
+		}
+		
 		
 		protected function actionPause_clickHandler(e:Event):void{
 			tivoRemote.pause();
