@@ -27,11 +27,15 @@ package components
 		private var loader:Loader;
 		private var image:DisplayObject;
 		private var _iconPath:String = "";
+		private var _buttonWidth:int;
+		private var _buttonHeight:int;
 		
-		public function IconButton(iconPath:String)
+		public function IconButton(iconPath:String,buttonWidth:int=50,buttonHeight:int=50):void
 		{
 			super(null, null, null, null);
 			_iconPath = iconPath;
+			_buttonWidth = buttonWidth;
+			_buttonHeight = buttonHeight;
 			init();
 		}
 		
@@ -58,13 +62,13 @@ package components
 			
 			var urlReq:URLRequest = new URLRequest(_iconPath);
 			
-			matrix.createGradientBox( BUTTON_WIDTH, BUTTON_HEIGHT, 90 * ( Math.PI / 180 ) );			
+			matrix.createGradientBox( _buttonWidth, _buttonHeight, 90 * ( Math.PI / 180 ) );			
 			
 			// Up
 			state = new Sprite();
 			state.graphics.lineStyle( 1, 0x00FF00, 0 );
 			state.graphics.beginGradientFill( GradientType.LINEAR, colors, alphas, ratios, matrix );  
-			state.graphics.drawRoundRect( 0, 0, BUTTON_WIDTH, BUTTON_HEIGHT, BUTTON_CURVE, BUTTON_CURVE );
+			state.graphics.drawRoundRect( 0, 0, _buttonWidth, _buttonHeight, BUTTON_CURVE, BUTTON_CURVE );
 			state.graphics.endFill();
 			
 			var uploader:Loader = new Loader();
@@ -78,7 +82,7 @@ package components
 			hit = new Shape();	
 			hit.graphics.lineStyle( 1, 0x00FF00, 0 );
 			hit.graphics.beginGradientFill( GradientType.LINEAR, colors, alphas, ratios, matrix );  
-			hit.graphics.drawRoundRect( 0, 0, BUTTON_WIDTH, BUTTON_HEIGHT, BUTTON_CURVE, BUTTON_CURVE );
+			hit.graphics.drawRoundRect( 0, 0, _buttonWidth, _buttonHeight, BUTTON_CURVE, BUTTON_CURVE );
 			hit.graphics.endFill();			
 			
 			hitTestState = hit;
@@ -90,7 +94,7 @@ package components
 			state = new Sprite();
 			state.graphics.lineStyle( 1, 0x00FF00, 0 );
 			state.graphics.beginGradientFill( GradientType.LINEAR, colors, alphas, ratios, matrix );  
-			state.graphics.drawRoundRect( 0, 0, BUTTON_WIDTH, BUTTON_HEIGHT, BUTTON_CURVE, BUTTON_CURVE );
+			state.graphics.drawRoundRect( 0, 0, _buttonWidth, _buttonHeight, BUTTON_CURVE, BUTTON_CURVE );
 			state.graphics.endFill();
 			var overloader:Loader = new Loader();
 			overloader.contentLoaderInfo.addEventListener(Event.COMPLETE, imageComplete);
@@ -104,7 +108,7 @@ package components
 			state = new Sprite();
 			state.graphics.lineStyle( 1, 0x00FF00, 0 );
 			state.graphics.beginGradientFill( GradientType.LINEAR, colors, alphas, ratios, matrix );  
-			state.graphics.drawRoundRect( 0, 0, BUTTON_WIDTH, BUTTON_HEIGHT, BUTTON_CURVE, BUTTON_CURVE );
+			state.graphics.drawRoundRect( 0, 0, _buttonWidth, _buttonHeight, BUTTON_CURVE, BUTTON_CURVE );
 			state.graphics.endFill();
 			
 			var downloader:Loader = new Loader();
@@ -120,8 +124,8 @@ package components
 		
 		protected function imageComplete(event:Event):void
 		{
-			event.currentTarget.loader.x = BUTTON_WIDTH/2 - event.currentTarget.width/2;
-			event.currentTarget.loader.y = BUTTON_HEIGHT/2 - event.currentTarget.height/2;
+			event.currentTarget.loader.x = _buttonWidth/2 - event.currentTarget.width/2;
+			event.currentTarget.loader.y = _buttonWidth/2 - event.currentTarget.height/2;
 		}		
 		
 	}

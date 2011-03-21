@@ -15,10 +15,14 @@ package components
 	
 	public class ArrowPad extends BasePad
 	{
-		public function ArrowPad()
+		public function ArrowPad(screenWidth:int=480)
 		{
-			super();
+			super(screenWidth);
+			var fontSize:int = 14;
 			
+			if (screenWidth < 400){
+				fontSize = 9;
+			}
 			
 			
 			//up
@@ -42,9 +46,12 @@ package components
 			addChild(down);
 			
 			//select
-			var select:LabelButton = getLabelButton("Select", COLUMNS[1], ROWS[1], 14);
+			var select:LabelButton = getLabelButton("Select", COLUMNS[1], ROWS[1], fontSize);
 			down.addEventListener(MouseEvent.CLICK, select_clicked);
 			addChild(select);
+			
+			
+			
 			
 			
 			

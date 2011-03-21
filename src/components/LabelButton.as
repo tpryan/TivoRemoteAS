@@ -93,7 +93,7 @@ package components
 			state = new Sprite();
 			state.graphics.lineStyle( 1, 0x00FF00, 0 );
 			state.graphics.beginGradientFill( GradientType.LINEAR, colors, alphas, ratios, matrix );  
-			state.graphics.drawRoundRect( 0, 0, buttonWidth, buttonHeight, BUTTON_CURVE, BUTTON_CURVE );
+			state.graphics.drawRoundRect( 3, 3, buttonWidth, buttonHeight, BUTTON_CURVE, BUTTON_CURVE );
 			state.graphics.endFill();
 			
 			label = new TextField();

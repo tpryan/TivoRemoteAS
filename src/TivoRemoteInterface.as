@@ -5,10 +5,10 @@ package
 	import com.terrenceryan.tivoremote.TivoRemote;
 	import com.terrenceryan.tivoremote.TivoService;
 	
-	import components.LabelButton;
 	import components.ArrowPad;
 	import components.BasePad;
 	import components.ChannelPad;
+	import components.LabelButton;
 	import components.NumberPad;
 	import components.PlayControlPad;
 	import components.ThumbsPad;
@@ -31,31 +31,54 @@ package
 		protected var playControlPad:PlayControlPad = null;
 		protected var channelPad:ChannelPad = null;
 		protected var thumbsPad:ThumbsPad = null;
+		protected var tivoButton:LabelButton = null;
 		
-		private const BUTTON_WIDTH:int = 170;
-		private const BUTTON_HEIGHT:int = 50;
-		private const COL1X:int= 10;
-		private const COL2X:int= 200;
-		private const COL3X:int= 390;
-		private const TOP:int= 10;
-		private const ROW2Y:int = 280;
 		
 		private var centerLine:int = 0;
 		
+		private var BUTTON_WIDTH:int;
+		private var BUTTON_HEIGHT:int;
+		private var PADDING:int;
 		
-		private const COLUMNS:Array = new Array(0,60,120,180,240,300,360,420,480,540,600,660);
-		private const ROWS:Array = new Array(0,60,120,180,240,300,360,420,480,540,600,660);
+		private const COLUMN_COUNT:int = 10;
+		private const ROW_COUNT:int = 10;
+		
+		private var ROWS:Array = initRows();
+		
+		private var deviceScreenWidth:int;
 		
 		public function TivoRemoteInterface()
 		{
 			super();
 			
+			deviceScreenWidth = stage.fullScreenWidth;
+			
+			BUTTON_WIDTH = initButtonDefaults();
+			BUTTON_HEIGHT = initButtonDefaults();
+			PADDING = initPaddingDefault();
+			
 			// support autoOrients
 			stage.align = StageAlign.TOP_LEFT;
 			stage.scaleMode = StageScaleMode.NO_SCALE;
-			centerLine = stage.stageWidth/2;
+			centerLine = deviceScreenWidth/2;
+			
+			trace(centerLine);
+			
+			var basePad:BasePad = new BasePad();
+			
+			var tivoButton_width:int = (5 * BUTTON_WIDTH) + (5 * PADDING );
+
+			
+			tivoButton = basePad.getLabelButton("Tivo",0, 10,14,tivoButton_width);
+			tivoButton.x = centerLine - tivoButton.width/2;
+			tivoButton.addEventListener(MouseEvent.CLICK, tivo_clickHandler);
+						addChild(tivoButton);
 			
 			drawArrowPad();
+			
+			
+			
+			
 			drawPlayControlPad();
 			drawNumPad();
 			
@@ -70,31 +93,67 @@ package
 				
 		}
 		
+		private function initButtonDefaults():int{
+			var result:int = 70;
+			if (deviceScreenWidth < 400){
+				result = 30;
+			}
+			return result;
+		}
+		
+		private function initPaddingDefault():int{
+			var result:int = 8;
+			if (deviceScreenWidth < 400){
+				result = 4;
+			}
+			return result;
+		}
+		
+		private function initRows():Array{
+			var result:Array = new Array();
+			var i:int = 0;
+			
+			for (i=0; i < ROW_COUNT; i++){
+				result.push((BUTTON_HEIGHT * i) + (PADDING *i) + 10);
+			}
+			
+			return result;
+		}
+		
+		
+		private function locateBelow(object:Object):int{
+			var result:int = object.y + object.height + PADDING;
+			return result;
+		}
+		
+		private function centerObject(object:Object):void{
+			object.x= centerLine - object.width/2;
+		}
+		
 		private function drawOtherButtons():void{
 			var basePad:BasePad = new BasePad();
 			
-			var tivoButton:LabelButton = basePad.getLabelButton("Tivo",centerLine - 45, ROWS[0],14);
-			tivoButton.addEventListener(MouseEvent.CLICK, tivo_clickHandler);
-			addChild(tivoButton);
+		
 			
-			var liveButton:LabelButton =  basePad.getLabelButton("Live",channelPad.x, channelPad.y + channelPad.height + 10,14);;
+			var liveButton:LabelButton =  basePad.getLabelButton("Live",channelPad.x, channelPad.y + channelPad.height + PADDING,14);;
 			liveButton.addEventListener(MouseEvent.CLICK, live_clickHandler);
 			addChild(liveButton);
 			
-			var infoButton:LabelButton =  basePad.getLabelButton("Info",tivoButton.x - 120, ROWS[0],14);
-			infoButton.addEventListener(MouseEvent.CLICK, live_clickHandler);
-			addChild(infoButton);
 			
-			var guideButton:LabelButton =  basePad.getLabelButton("Guide",thumbsPad.x, thumbsPad.y + thumbsPad.height + 10,14);
+			
+			var guideButton:LabelButton =  basePad.getLabelButton("Guide",thumbsPad.x, thumbsPad.y + thumbsPad.height + PADDING,14);
 			guideButton.addEventListener(MouseEvent.CLICK, live_clickHandler);
 			addChild(guideButton);
+			
+			var infoButton:LabelButton =  basePad.getLabelButton("Info",thumbsPad.x, numpad.y,14);
+			infoButton.addEventListener(MouseEvent.CLICK, live_clickHandler);
+			addChild(infoButton);
 		}
-		
 		
 		private function drawChannelPad():void{
 			channelPad = new ChannelPad();
 			channelPad.x = (arrowPad.x - channelPad.width) -10 ;
-			channelPad.y = ROWS[1]+ 25;
+			channelPad.y = arrowPad.y;
 			channelPad.addEventListener("upClick", channelUp_clickHandler);
 			channelPad.addEventListener("downClick", channelDown_clickHandler);
 			addChild(channelPad);
@@ -103,7 +162,7 @@ package
 		private function drawThumbsPad():void{
 			thumbsPad = new ThumbsPad();
 			thumbsPad.x =  arrowPad.x + arrowPad.width + 10 ;
-			thumbsPad.y =  ROWS[1]+ 25;
+			thumbsPad.y = arrowPad.y;
 			thumbsPad.addEventListener("upClick", thumbsUp_clickHandler);
 			thumbsPad.addEventListener("downClick", thumbsDown_clickHandler);
 			addChild(thumbsPad);
@@ -111,8 +170,8 @@ package
 		
 		private function drawPlayControlPad():void{
 			playControlPad = new PlayControlPad();
-			playControlPad.x= stage.stageWidth/2 - playControlPad.width/2 -20;
-			playControlPad.y = ROWS[4];
+			centerObject(playControlPad);
+			playControlPad.y = locateBelow(arrowPad);
 			playControlPad.addEventListener("reverse", actionReverse_clickHandler);
 			playControlPad.addEventListener("replay", actionReplay_clickHandler);
 			playControlPad.addEventListener("pause", actionPause_clickHandler);
@@ -123,9 +182,9 @@ package
 		}
 		
 		private function drawArrowPad():void{
-			arrowPad = new ArrowPad();
-			arrowPad.x= stage.stageWidth/2 - arrowPad.width/2 -20;
-			arrowPad.y= ROWS[1];
+			arrowPad = new ArrowPad(deviceScreenWidth);
+			centerObject(arrowPad);
+			arrowPad.y= locateBelow(tivoButton);
 			arrowPad.addEventListener("upClick", up_clickHandler);
 			arrowPad.addEventListener("downClick", down_clickHandler);
 			arrowPad.addEventListener("leftClick", left_clickHandler);
@@ -136,8 +195,8 @@ package
 		
 		private function drawNumPad():void{
 			numpad = new NumberPad();
-			numpad.x = stage.stageWidth/2 - numpad.width/2 -20;
-			numpad.y = ROWS[8];
+			numpad.x = centerLine - numpad.width/2;
+			numpad.y = locateBelow(playControlPad);
 			numpad.addEventListener("num1", pad1_clickHandler);
 			numpad.addEventListener("num2", pad2_clickHandler);
 			numpad.addEventListener("num3", pad3_clickHandler);
@@ -152,9 +211,6 @@ package
 			numpad.addEventListener("c", clear_clickHandler);
 			addChild(numpad);
 		}
-		
-		
-		
 		
 		protected function actionPause_clickHandler(e:Event):void{
 			tivoRemote.pause();

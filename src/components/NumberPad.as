@@ -24,8 +24,6 @@ package components
 	public class NumberPad extends BasePad
 	{
 		
-		protected var COLUMNSLOCAL:Array = new Array(0,50,100);
-		protected var ROWSLOCAL:Array = new Array(0,50,100,150);
 		
 		public function NumberPad()
 		{
@@ -33,69 +31,69 @@ package components
 			super();
 			
 			//1
-			var num1:LabelButton = getLabelButton("1", COLUMNSLOCAL[0], ROWSLOCAL[0]);
+			var num1:LabelButton = getLabelButton("1", COLUMNS[0], ROWS[0]);
 			num1.addEventListener(MouseEvent.CLICK, num0_clicked);
 			addChild(num1);
 			
 			//2
-			var num2:LabelButton = getLabelButton("2", COLUMNSLOCAL[1], ROWSLOCAL[0]);
+			var num2:LabelButton = getLabelButton("2", COLUMNS[1], ROWS[0]);
 			num2.addEventListener(MouseEvent.CLICK, num2_clicked);
 			addChild(num2);
 			
 			//3
-			var num3:LabelButton = getLabelButton("3", COLUMNSLOCAL[2], ROWSLOCAL[0]);
+			var num3:LabelButton = getLabelButton("3", COLUMNS[2], ROWS[0]);
 			num3.addEventListener(MouseEvent.CLICK, num3_clicked);
 			addChild(num3);
 			
 			//4
-			var num4:LabelButton = getLabelButton("4", COLUMNSLOCAL[0], ROWSLOCAL[1]);
+			var num4:LabelButton = getLabelButton("4", COLUMNS[0], ROWS[1]);
 			num4.addEventListener(MouseEvent.CLICK, num4_clicked);
 			addChild(num4);
 			
 			//5
-			var num5:LabelButton = getLabelButton("5", COLUMNSLOCAL[1], ROWSLOCAL[1]);
+			var num5:LabelButton = getLabelButton("5", COLUMNS[1], ROWS[1]);
 			num5.addEventListener(MouseEvent.CLICK, num5_clicked);
 			addChild(num5);
 			
 			//6
-			var num6:LabelButton = getLabelButton("6", COLUMNSLOCAL[2], ROWSLOCAL[1]);
+			var num6:LabelButton = getLabelButton("6", COLUMNS[2], ROWS[1]);
 			num6.addEventListener(MouseEvent.CLICK, num6_clicked);
 			addChild(num6);
 			
 			//7
-			var num7:LabelButton = getLabelButton("7", COLUMNSLOCAL[0], ROWSLOCAL[2]);
+			var num7:LabelButton = getLabelButton("7", COLUMNS[0], ROWS[2]);
 			num7.addEventListener(MouseEvent.CLICK, num7_clicked);
 			addChild(num7);
 			
 			//8
-			var num8:LabelButton = getLabelButton("8", COLUMNSLOCAL[1], ROWSLOCAL[2]);
+			var num8:LabelButton = getLabelButton("8", COLUMNS[1], ROWS[2]);
 			num8.addEventListener(MouseEvent.CLICK, num8_clicked);
 			addChild(num8);
 			
 			//9
-			var num9:LabelButton = getLabelButton("9", COLUMNSLOCAL[2], ROWSLOCAL[2]);
+			var num9:LabelButton = getLabelButton("9", COLUMNS[2], ROWS[2]);
 			num9.addEventListener(MouseEvent.CLICK, num9_clicked);
 			addChild(num9);
 			
 			//c - Clear button
-			var numc:LabelButton = getLabelButton("Clear", COLUMNSLOCAL[0], ROWSLOCAL[3], 14);
+			var numc:LabelButton = getLabelButton("Clear", COLUMNS[0], ROWS[3], 14);
 			numc.addEventListener(MouseEvent.CLICK, c_clicked);
 			addChild(numc);
 			
 			//0
-			var num0:LabelButton = getLabelButton("0", COLUMNSLOCAL[1], ROWSLOCAL[3]);
+			var num0:LabelButton = getLabelButton("0", COLUMNS[1], ROWS[3]);
 			num0.addEventListener(MouseEvent.CLICK, num0_clicked);
 			addChild(num0);
 			
 			//e
-			var nume:LabelButton = getLabelButton("Enter", COLUMNSLOCAL[2], ROWSLOCAL[3],14);
+			var nume:LabelButton = getLabelButton("Enter", COLUMNS[2], ROWS[3],14);
 			nume.addEventListener(MouseEvent.CLICK, e_clicked);
 			addChild(nume);
 		
 		}
 		
-		public override function getLabelButton(label:String, x:int, y:int, fontSize:int=20,width:int=BUTTON_WIDTH,height:int=BUTTON_HEIGHT):LabelButton{
-			return super.getLabelButton(label, x, y, fontSize,40,40);
+		public override function getLabelButton(label:String, x:int, y:int, fontSize:int=20,width:int=0,height:int=0):LabelButton{
+			return super.getLabelButton(label, x, y,fontSize,70,70);
 		}
 		
 		

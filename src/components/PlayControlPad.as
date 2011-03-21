@@ -18,44 +18,41 @@ package components
 		{
 			super();
 			
-			
-			
-			
 			//reverse
-			var reverse:IconButton = getIconButton("/assets/controls/reverse_s1.png", COLUMNS[0], ROWS[1]);
+			var reverse:IconButton = getIconButton("/assets/controls/reverse_s1.png", COLUMNS[0], ROWS[0]);
 			reverse.addEventListener(MouseEvent.CLICK, reverse_clicked);
 			addChild(reverse);
 			
 			//pause
 			var pause:PauseButton = new PauseButton();
-			pause.x = COLUMNS[1];
-			pause.y = ROWS[1];
+			pause.x = COLUMNS[2];
+			pause.y = ROWS[0];
 			pause.addEventListener(MouseEvent.CLICK, pause_clicked);
 			addChild(pause);
 			
 			//forward
-			var forward:IconButton = getIconButton("/assets/controls/forward_s1.png", COLUMNS[2], ROWS[1]);
+			var forward:IconButton = getIconButton("/assets/controls/forward_s1.png", COLUMNS[3], ROWS[0]);
 			forward.addEventListener(MouseEvent.CLICK, forward_clicked);
 			addChild(forward);
 			
 			//replay
-			var replay:IconButton = getIconButton("/assets/controls/backup_s1.png", COLUMNS[0], ROWS[2]);
+			var replay:IconButton = getIconButton("/assets/controls/backup_s1.png", COLUMNS[1], ROWS[0]);
 			replay.addEventListener(MouseEvent.CLICK, replay_clicked);
 			addChild(replay);
 			
 			//slow
-			var slow:IconButton = getIconButton("/assets/controls/slow_s1.png", COLUMNS[1], ROWS[3]);
+			var slow:IconButton = getIconButton("/assets/controls/slow_s1.png", COLUMNS[3], ROWS[1]);
 			slow.addEventListener(MouseEvent.CLICK, slow_clicked);
 			addChild(slow);
 			
 			//advace
-			var advance:IconButton = getIconButton("/assets/controls/advance_s1.png", COLUMNS[2], ROWS[2]);
+			var advance:IconButton = getIconButton("/assets/controls/advance_s1.png", COLUMNS[4], ROWS[0]);
 			advance.addEventListener(MouseEvent.CLICK, slow_clicked);
 			addChild(advance);
 			
 			
 			//record
-			var record:IconButton = getIconButton("/assets/controls/record_s1.png", COLUMNS[1], ROWS[2]);
+			var record:IconButton = getIconButton("/assets/controls/record_s1.png", COLUMNS[1], ROWS[1]);
 			record.addEventListener(MouseEvent.CLICK, slow_clicked);
 			addChild(record);
 			
