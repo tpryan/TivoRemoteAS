@@ -50,6 +50,7 @@ package components
 			label = new TextField();
 			label.width = buttonWidth;
 			label.height = buttonHeight;
+			label.x = 0;
 			label.y = buttonHeight/4;
 			label.defaultTextFormat = new TextFormat( FONTFACE, fontSize, 0x000000, true, null, null, null, null, TextAlign.CENTER );
 			label.selectable = false;
@@ -78,7 +79,8 @@ package components
 			
 			label = new TextField();
 			label.width = buttonWidth;
-			label.height = buttonHeight;		
+			label.height = buttonHeight;
+			label.x = 0;
 			label.y = buttonHeight/4;
 			label.defaultTextFormat = new TextFormat( FONTFACE, fontSize, 0xFFFFFF, true, null, null, null, null, TextAlign.CENTER );
 			label.selectable = false;
@@ -98,8 +100,9 @@ package components
 			
 			label = new TextField();
 			label.width = buttonWidth;
-			label.height = buttonHeight;	
-			label.y = buttonHeight/4;
+			label.height = buttonHeight;
+			label.x = 3;
+			label.y = (buttonHeight/4) +3;
 			label.defaultTextFormat = new TextFormat( FONTFACE, fontSize, 0xFFFFFF, true, null, null, null, null, TextAlign.CENTER );
 			label.selectable = false;
 			label.text = buttonLabel;			
