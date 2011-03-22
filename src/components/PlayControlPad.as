@@ -14,9 +14,9 @@ package components
 	
 	public class PlayControlPad extends BasePad
 	{
-		public function PlayControlPad()
+		public function PlayControlPad(screenWidth:int=480)
 		{
-			super();
+			super(screenWidth);
 			
 			//reverse
 			var reverse:IconButton = getIconButton("/assets/controls/reverse_s1.png", COLUMNS[0], ROWS[0]);
@@ -24,7 +24,7 @@ package components
 			addChild(reverse);
 			
 			//pause
-			var pause:PauseButton = new PauseButton();
+			var pause:PauseButton = new PauseButton(screenWidth);
 			pause.x = COLUMNS[2];
 			pause.y = ROWS[0];
 			pause.addEventListener(MouseEvent.CLICK, pause_clicked);

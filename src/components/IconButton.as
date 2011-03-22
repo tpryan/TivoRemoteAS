@@ -108,11 +108,11 @@ package components
 			state = new Sprite();
 			state.graphics.lineStyle( 1, 0x00FF00, 0 );
 			state.graphics.beginGradientFill( GradientType.LINEAR, colors, alphas, ratios, matrix );  
-			state.graphics.drawRoundRect( 0, 0, _buttonWidth, _buttonHeight, BUTTON_CURVE, BUTTON_CURVE );
+			state.graphics.drawRoundRect( 1, 1, _buttonWidth, _buttonHeight, BUTTON_CURVE, BUTTON_CURVE );
 			state.graphics.endFill();
 			
 			var downloader:Loader = new Loader();
-			downloader.contentLoaderInfo.addEventListener(Event.COMPLETE, imageComplete);
+			downloader.contentLoaderInfo.addEventListener(Event.COMPLETE, imageCompleteDown);
 			downloader.load(urlReq);
 			
 			state.addChild(downloader);
@@ -126,7 +126,13 @@ package components
 		{
 			event.currentTarget.loader.x = _buttonWidth/2 - event.currentTarget.width/2;
 			event.currentTarget.loader.y = _buttonWidth/2 - event.currentTarget.height/2;
-		}		
+		}
+		
+		protected function imageCompleteDown(event:Event):void
+		{
+			event.currentTarget.loader.x = _buttonWidth/2 - event.currentTarget.width/2 + 1;
+			event.currentTarget.loader.y = _buttonWidth/2 - event.currentTarget.height/2 + 1;
+		}
 		
 	}
 }

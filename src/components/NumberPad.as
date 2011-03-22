@@ -18,17 +18,21 @@ package components
 	[Event(name="num0", type="flash.events.Event")]
 	[Event(name="e", type="flash.events.Event")]
 	[Event(name="c", type="flash.events.Event")]
-	
+	[Event(name="info", type="flash.events.Event")]
+	[Event(name="guide", type="flash.events.Event")]
+	[Event(name="live", type="flash.events.Event")]
 	
 	
 	public class NumberPad extends BasePad
 	{
 		
 		
-		public function NumberPad()
+		public function NumberPad(screenWidth:int=480)
 		{
 			
-			super();
+			super(screenWidth);
+			
+			
 			
 			//1
 			var num1:LabelButton = getLabelButton("1", COLUMNS[0], ROWS[0]);
@@ -76,24 +80,35 @@ package components
 			addChild(num9);
 			
 			//c - Clear button
-			var numc:LabelButton = getLabelButton("Clear", COLUMNS[0], ROWS[3], 14);
+			var numc:LabelButton = getLabelButton("Clear", COLUMNS[3], ROWS[0]);
 			numc.addEventListener(MouseEvent.CLICK, c_clicked);
 			addChild(numc);
 			
 			//0
-			var num0:LabelButton = getLabelButton("0", COLUMNS[1], ROWS[3]);
+			var num0:LabelButton = getLabelButton("0", COLUMNS[3], ROWS[2]);
 			num0.addEventListener(MouseEvent.CLICK, num0_clicked);
 			addChild(num0);
 			
 			//e
-			var nume:LabelButton = getLabelButton("Enter", COLUMNS[2], ROWS[3],14);
+			var nume:LabelButton = getLabelButton("Enter", COLUMNS[3], ROWS[1]);
 			nume.addEventListener(MouseEvent.CLICK, e_clicked);
 			addChild(nume);
+			
+			//info
+			var info:LabelButton = getLabelButton("Info", COLUMNS[4], ROWS[0]);
+			info.addEventListener(MouseEvent.CLICK, info_clicked);
+			addChild(info);
+			
+			//info
+			var guide:LabelButton = getLabelButton("Guide", COLUMNS[4], ROWS[1]);
+			guide.addEventListener(MouseEvent.CLICK, guide_clicked);
+			addChild(guide);
+			
+			//info
+			var live:LabelButton = getLabelButton("Live", COLUMNS[4], ROWS[2]);
+			live.addEventListener(MouseEvent.CLICK, live_clicked);
+			addChild(live);
 		
-		}
-		
-		public override function getLabelButton(label:String, x:int, y:int, fontSize:int=20,width:int=0,height:int=0):LabelButton{
-			return super.getLabelButton(label, x, y,fontSize,70,70);
 		}
 		
 		
@@ -134,6 +149,18 @@ package components
 		private function c_clicked(e:MouseEvent):void{
 			dispatchEvent(new Event("c")); 
 		}
+		private function info_clicked(e:MouseEvent):void{
+			dispatchEvent(new Event("info")); 
+		}
+		
+		protected function live_clicked(event:MouseEvent):void{
+			dispatchEvent(new Event("live")); 
+		}
+		
+		protected function guide_clicked(event:MouseEvent):void{
+			dispatchEvent(new Event("guide")); 
+		}
+		
 		
 	}
 }

@@ -18,10 +18,10 @@ package components
 		public function ArrowPad(screenWidth:int=480)
 		{
 			super(screenWidth);
-			var fontSize:int = 14;
+			var fontSize:int = 24;
 			
 			if (screenWidth < 400){
-				fontSize = 9;
+				fontSize = 14;
 			}
 			
 			

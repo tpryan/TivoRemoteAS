@@ -95,14 +95,14 @@ package components
 			state = new Sprite();
 			state.graphics.lineStyle( 1, 0x00FF00, 0 );
 			state.graphics.beginGradientFill( GradientType.LINEAR, colors, alphas, ratios, matrix );  
-			state.graphics.drawRoundRect( 3, 3, buttonWidth, buttonHeight, BUTTON_CURVE, BUTTON_CURVE );
+			state.graphics.drawRoundRect( 1, 1, buttonWidth, buttonHeight, BUTTON_CURVE, BUTTON_CURVE );
 			state.graphics.endFill();
 			
 			label = new TextField();
 			label.width = buttonWidth;
 			label.height = buttonHeight;
 			label.x = 3;
-			label.y = (buttonHeight/4) +3;
+			label.y = (buttonHeight/4) + 1;
 			label.defaultTextFormat = new TextFormat( FONTFACE, fontSize, 0xFFFFFF, true, null, null, null, null, TextAlign.CENTER );
 			label.selectable = false;
 			label.text = buttonLabel;			

@@ -16,9 +16,9 @@ package components
 		protected var play:IconButton;
 		protected var pause:IconButton;
 		
-		public function PauseButton()
+		public function PauseButton(screenWidth:int=480)
 		{
-			super();
+			super(screenWidth);
 			
 			//play
 			play = getIconButton("/assets/controls/play_s1.png", 0,0);

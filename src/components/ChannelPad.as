@@ -18,11 +18,10 @@ package components
 	
 	public class ChannelPad extends BasePad
 	{
-		public function ChannelPad()
+		public function ChannelPad(screenWidth:int=480)
 		{
 			
-			super();
-			
+			super(screenWidth);
 			
 			//up
 			var up:IconButton = getIconButton("/assets/controls/c_up_s1.png", COLUMNS[0], ROWS[0]);
@@ -33,7 +32,6 @@ package components
 			var down:IconButton = getIconButton("/assets/controls/c_down_s1.png", COLUMNS[0], ROWS[1]);
 			down.addEventListener(MouseEvent.CLICK, down_clicked);
 			addChild(down);
-			
 			
 		}
 		

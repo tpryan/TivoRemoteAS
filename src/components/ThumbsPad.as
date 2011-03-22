@@ -13,13 +13,10 @@ package components
 	
 	public class ThumbsPad extends BasePad
 	{
-		public function ThumbsPad()
+		public function ThumbsPad(screenWidth:int=480)
 		{
 			
-			super();
-			
-			
-			
+			super(screenWidth);
 			
 			//up
 			var up:IconButton = getIconButton("/assets/controls/thumbsup_s1.png", COLUMNS[0], ROWS[0]);
