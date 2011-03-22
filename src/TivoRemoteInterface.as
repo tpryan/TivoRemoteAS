@@ -8,10 +8,12 @@ package
 	import components.ArrowPad;
 	import components.BasePad;
 	import components.ChannelPad;
+	import components.Hostname;
 	import components.IconButton;
 	import components.LabelButton;
 	import components.NumberPad;
 	import components.PlayControlPad;
+	import components.Settings;
 	import components.ThumbsPad;
 	
 	import flash.desktop.NativeApplication;
@@ -38,7 +40,7 @@ package
 		protected var thumbsPad:ThumbsPad = null;
 		protected var tivoButton:LabelButton = null;
 		protected var settingsButton:IconButton = null;
-		
+		protected var settings:Settings = null;
 		
 		private var centerLine:int = 0;
 		
@@ -76,10 +78,6 @@ package
 			else{
 				tivoButtonAdj = 5 * PADDING;
 			}
-		
-			
-			trace(centerLine);
-			
 			
 			var tivoButton_width:int = (4 * BUTTON_WIDTH) + (3 * PADDING );
 			var tivoButton_height:int = BUTTON_HEIGHT;
@@ -92,9 +90,8 @@ package
 			
 			settingsButton = basePad.getIconButton("/assets/controls/settings.png", tivoButton.x + tivoButton.width + PADDING, tivoButton.y);
 			settingsButton.x = tivoButton.x + tivoButton.width + PADDING;
+			settingsButton.addEventListener(MouseEvent.CLICK, openSettings);
 			addChild(settingsButton);
-			
-			
 			
 			drawArrowPad();
 			drawPlayControlPad();
@@ -103,11 +100,38 @@ package
 			drawThumbsPad();
 			
 			
-			tivoRemote = new TivoRemote("D");
+			settings = new Settings(stage.fullScreenWidth,stage.fullScreenHeight);
+			settings.x = stage.fullScreenWidth;
+			settings.addEventListener("settingChanged",reloadTivoRemote); 
+			addChild(settings);
+			
+			
+			var hostname:Hostname = new Hostname();
+			
+			tivoRemote = new TivoRemote(hostname.name);
+			
+			if (hostname.name.length == 0){
+				openSettings(null);
+				
+			}
+			
 			//tivoRemote = new TivoRemote("10.0.1.191");
 			
 				
 		}
+		
+		protected function reloadTivoRemote(event:Event):void
+		{
+			var hostname:Hostname = new Hostname();
+			tivoRemote = new TivoRemote(hostname.name);
+			trace('yo');
+		}
+		
+		protected function openSettings(event:MouseEvent):void
+		{
+			settings.x = 0;
+			
+		}		
 		
 		private function initButtonDefaults():int{
 			var result:int = 82;
