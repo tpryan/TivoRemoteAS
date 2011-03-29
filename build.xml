@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project name="TivoRemote" default="" basedir=".">
+<project name="TivoRemote" default="main" basedir=".">
 	
 	<property file="settings.properties"/>
 	
@@ -12,7 +12,9 @@
 	
 	<typedef resource="flexTasks.tasks" classpathref="flextasks.classpath" />
 	
-	<target name="main" depends="android" />
+	<target name="main" depends="desktop,device" description="Builds app files." />
+	
+	<target name="device" depends="android,ios" description="Builds app files for all devices." />
 	
 	
 	
@@ -21,11 +23,14 @@
 		<delete dir="${build.dir}"/>
 	</target>
 	
-	<target name="prepPackage" depends="compile" />
+	<target name="compile" depends="compile.desktop,compile.device" />
 	
-	<target name="compile" depends="clean"> 
-		<echo message="Compiling swf"/>
-		<mxmlc file="${projectFile}" output="${swfFile}"> 
+	
+	<target name="compile.device" depends="clean">
+		<echo message="Creating Device Folder"/>
+		<mkdir dir="${device.build}"/>
+		<echo message="Compiling swf for devices"/>
+		<mxmlc file="${projectFile}" output="${device.swf}"> 
 	        <load-config filename="${FLEX_HOME}/frameworks/airmobile-config.xml"/> 
 	        <source-path path-element="${FLEX_HOME}/frameworks"/>
 			<static-link-runtime-shared-libraries />
@@ -34,16 +39,70 @@
                 <include name="libs/*" />
             </compiler.library-path>
 		</mxmlc>
+		
     </target>
 	
+	<target name="compile.desktop" depends="clean">
+		<echo message="Creating Desktop Folder"/>
+		<mkdir dir="${desktop.build}"/>
+		<echo message="Compiling swf for desktop"/>
+		<mxmlc file="${projectFile}" output="${desktop.swf}"> 
+	        <load-config filename="${FLEX_HOME}/frameworks/air-config.xml"/> 
+	        <source-path path-element="${FLEX_HOME}/frameworks"/>
+			<static-link-runtime-shared-libraries />
+			
+			<compiler.library-path dir="${FLEX_HOME}/frameworks" append="true">
+                <include name="libs/*" />
+            </compiler.library-path>
+		</mxmlc>
+		
+		
+    </target>
 	
-	<target name="android" depends="prepPackage, android.collect, android.package" description="All of the tasks needed to create an Android apk file." />
+	<target name="desktop" depends="compile.desktop, desktop.collect, desktop.package" description="All of the tasks needed to create an Android apk file." />
+	
+	<target name="desktop.collect">
+		<echo message="Creating Device Folder for Desktop"/>
+		<mkdir dir="${build.dir}/desktop"/>
+		<echo message="Copying SWF for Desktop"/>
+		<copy file="${desktop.swf}" todir="${build.dir}/desktop"  />
+		<echo message="Copying Application Description File for Desktop"/>
+		<copy file="${dev.dir}/${app.name}-app.xml" todir="${build.dir}/desktop" preservelastmodified="true" />
+		<echo message="Modifying Application Description File"/>
+		<replace file="${build.dir}/desktop/${app.name}-app.xml">
+			<replacefilter token="${contentText}" value="${app.name}.swf" />
+		</replace>
+		<echo message="Copying Assets for Desktop"/>
+		<copy todir="${build.dir}/desktop/assets" preservelastmodified="true">
+			<fileset dir="${dev.dir}/assets">
+				<exclude name='.gitignore'/>
+				<exclude name='**/.DS_Store'/>
+			</fileset>	
+		</copy>
+	</target>
+	
+	<target name="desktop.package">
+		<echo message="Packaging for Desktop"/>
+		<exec executable="${ADT}" dir="${build.dir}/desktop">
+			<arg value="-package"/>
+			<arg line="-storetype pkcs12"/>
+			<arg line="-keystore ${cert}" />
+			<arg line="-storepass ${cert.password}" />
+			<arg value="${app.name}"/>
+			<arg value="${app.name}-app.xml"/>
+			<arg value="${app.name}.swf"/>
+			<arg value="assets"/>
+		</exec>
+	</target>
+	
+	
+	<target name="android" depends="compile.device, android.collect, android.package" description="All of the tasks needed to create an Android apk file." />
 	
 	<target name="android.collect">
 		<echo message="Creating Device Folder for Android"/>
 		<mkdir dir="${build.dir}/android"/>
 		<echo message="Copying SWF for Android"/>
-		<copy file="${swfFile}" todir="${build.dir}/android"  />
+		<copy file="${device.swf}" todir="${build.dir}/android"  />
 		<echo message="Copying Application Description File for Android"/>
 		<copy file="${dev.dir}/${app.name}-app.xml" todir="${build.dir}/android" preservelastmodified="true" />
 		<echo message="Modifying Application Description File"/>
@@ -74,6 +133,44 @@
 		</exec>
 	</target>
 	
+	<target name="ios" depends="compile.device, ios.collect, ios.package" description="All of the tasks needed to create an IOS IPA file." />
+	
+	<target name="ios.collect">
+		<echo message="Creating Device Folder for IOS"/>
+		<mkdir dir="${build.dir}/IOS"/>
+		<echo message="Copying SWF for IOS"/>
+		<copy file="${device.swf}" todir="${build.dir}/IOS"  />
+		<echo message="Copying Application Description File for IOS"/>
+		<copy file="${dev.dir}/${app.name}-app.xml" todir="${build.dir}/IOS" preservelastmodified="true" />
+		<echo message="Modifying Application Description File"/>
+		<replace file="${build.dir}/IOS/${app.name}-app.xml">
+			<replacefilter token="${contentText}" value="${app.name}.swf" />
+		</replace>
+		<echo message="Copying Assets for IOS"/>
+		<copy todir="${build.dir}/IOS/assets" preservelastmodified="true">
+			<fileset dir="${dev.dir}/assets">
+				<exclude name='.gitignore'/>
+				<exclude name='**/.DS_Store'/>
+			</fileset>	
+		</copy>
+	</target>
+	
+	<target name="ios.package">
+		<echo message="Packaging for IOS"/>
+		<exec executable="${ADT}" dir="${build.dir}/IOS">
+			<arg value="-package"/>
+			<arg line="-target ipa-ad-hoc "/>
+			<arg line="-storetype pkcs12 "/>
+			<arg line="-keystore ${ios.cert} " />
+			<arg line="-storepass ${ios.certpass} " />
+			<arg line="-provisioning-profile ${ios.provision} " />
+			<arg value="${app.name}.ipa"/>
+			<arg value="${app.name}-app.xml"/>
+			<arg value="${app.name}.swf"/>
+			<arg value="assets"/>
+		</exec>
+	</target>
+	
 	<target name="android.install">
 		<echo message="Installing onto attached Android Device"/>
 		<exec executable="${ADB}">
@@ -81,6 +178,13 @@
 			<arg value="-r"/>
 			<arg value="${build.dir}/android/${app.name}.apk"/>
 		</exec>	
+	</target>
+	
+	<target name="desktop.debug" depends="compile.desktop,desktop.collect">
+		<echo message="Debugging on Desktop"/>
+		<exec executable="${ADL}" dir="${build.dir}/desktop">
+			<arg value="${app.name}-app.xml"/>
+		</exec>
 	</target>
 	
 	

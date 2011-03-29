@@ -26,10 +26,12 @@ package
 	import flash.events.Event;
 	import flash.events.MouseEvent;
 	import flash.geom.Matrix;
+	import flash.system.Capabilities;
 	
 	public class TivoRemoteInterface extends Sprite
 	{
 	
+		
 		protected var tivoService:TivoService = new TivoService();
 		protected var tivoRemote:TivoRemote = null;
 		
@@ -60,7 +62,16 @@ package
 		{
 			super();
 			
-			deviceScreenWidth = stage.fullScreenWidth;
+			if (stage.fullScreenWidth > 1024){
+				deviceScreenWidth = 270;
+			}
+			else{
+				deviceScreenWidth = stage.fullScreenWidth;
+			}
+			
+			
+			
+			
 			var basePad:BasePad = new BasePad(deviceScreenWidth);
 			
 			BUTTON_WIDTH = basePad.BUTTON_WIDTH;

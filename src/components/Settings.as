@@ -30,13 +30,13 @@ package components
 			addChild(textBox);
 			
 			
-			var saveButton:LabelButton = new LabelButton("Save",20,290,50);
+			var saveButton:LabelButton = new LabelButton("Save",20,250,50);
 			saveButton.x = 10;
 			saveButton.y = textBox.y + textBox.height + 10;
 			saveButton.addEventListener(MouseEvent.CLICK, saveHostname);
 			addChild(saveButton);
 			
-			var closeButton:LabelButton = new LabelButton("Close",20,290,50);
+			var closeButton:LabelButton = new LabelButton("Close",20,250,50);
 			closeButton.x = 10;
 			closeButton.y = settingHeight - saveButton.height - 10;
 			closeButton.addEventListener(MouseEvent.CLICK, close);

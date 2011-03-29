@@ -20,6 +20,7 @@ package components
 		
 		private var field:TextField;		
 		private var title:TextField;
+		private var fieldWidth:int = 250;
 		private var TITLE_FONTFACE:String = "Droid Sans";
 		private var FIELD_FONTFACE:String = "Droid Sans Mono";
 		
@@ -64,14 +65,14 @@ package components
 			border = new Shape();
 			border.graphics.lineStyle( 1, 0x000000 );
 			border.graphics.beginFill( 0xFFFFFF );
-			border.graphics.drawRoundRect( 0, 0, 290, 50, 8 );
+			border.graphics.drawRoundRect( 0, 0, fieldWidth, 50, 8 );
 			border.graphics.endFill();
 			border.x = 10;
 			border.y = 40;
 			addChild( border );
 			
 			field = new TextField();
-			field.width = 290;
+			field.width = fieldWidth;
 			field.height = 50;
 			field.x = 10;
 			field.y = 43;
