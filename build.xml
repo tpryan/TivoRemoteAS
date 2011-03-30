@@ -13,20 +13,19 @@
 	<typedef resource="flexTasks.tasks" classpathref="flextasks.classpath" />
 	
 	<target name="main" depends="desktop,device" description="Builds app files." />
-	
-	<target name="device" depends="android,ios" description="Builds app files for all devices." />
-	
-	
+	<target name="device" depends="android,blackberry,ios" description="Builds app files for all devices." />
 	
 	<target name="clean">
 		<echo message="Cleaning Build Space"/>
 		<delete dir="${build.dir}"/>
 	</target>
 	
-	<target name="compile" depends="compile.desktop,compile.device" />
+	<target name="createAppStore">
+		<echo message="Cleaning Build Space"/>
+		<mkdir dir="${build.dir}/APPS"/>
+	</target>
 	
-	
-	<target name="compile.device" depends="clean">
+	<target name="device.compile" depends="clean">
 		<echo message="Creating Device Folder"/>
 		<mkdir dir="${device.build}"/>
 		<echo message="Compiling swf for devices"/>
@@ -41,8 +40,11 @@
 		</mxmlc>
 		
     </target>
+
+	<!-- Desktop Steps -->
+	<target name="desktop" depends="desktop.compile, desktop.collect, desktop.package" description="All of the tasks needed to create an Android apk file." />
 	
-	<target name="compile.desktop" depends="clean">
+	<target name="desktop.compile" depends="clean">
 		<echo message="Creating Desktop Folder"/>
 		<mkdir dir="${desktop.build}"/>
 		<echo message="Compiling swf for desktop"/>
@@ -57,23 +59,21 @@
 		</mxmlc>
 		
 		
-    </target>
-	
-	<target name="desktop" depends="compile.desktop, desktop.collect, desktop.package" description="All of the tasks needed to create an Android apk file." />
+    </target>	
 	
 	<target name="desktop.collect">
 		<echo message="Creating Device Folder for Desktop"/>
-		<mkdir dir="${build.dir}/desktop"/>
+		<mkdir dir="${desktop.collect}"/>
 		<echo message="Copying SWF for Desktop"/>
-		<copy file="${desktop.swf}" todir="${build.dir}/desktop"  />
+		<copy file="${desktop.swf}" todir="${desktop.collect}"  />
 		<echo message="Copying Application Description File for Desktop"/>
-		<copy file="${dev.dir}/${app.name}-app.xml" todir="${build.dir}/desktop" preservelastmodified="true" />
+		<copy file="${dev.dir}/${app.name}-app.xml" todir="${desktop.collect}" preservelastmodified="true" />
 		<echo message="Modifying Application Description File"/>
-		<replace file="${build.dir}/desktop/${app.name}-app.xml">
+		<replace file="${desktop.collect}/${app.name}-app.xml">
 			<replacefilter token="${contentText}" value="${app.name}.swf" />
 		</replace>
 		<echo message="Copying Assets for Desktop"/>
-		<copy todir="${build.dir}/desktop/assets" preservelastmodified="true">
+		<copy todir="${desktop.collect}/assets" preservelastmodified="true">
 			<fileset dir="${dev.dir}/assets">
 				<exclude name='.gitignore'/>
 				<exclude name='**/.DS_Store'/>
@@ -81,9 +81,9 @@
 		</copy>
 	</target>
 	
-	<target name="desktop.package">
+	<target name="desktop.package" depends="createAppStore">
 		<echo message="Packaging for Desktop"/>
-		<exec executable="${ADT}" dir="${build.dir}/desktop">
+		<exec executable="${ADT}" dir="${desktop.collect}">
 			<arg value="-package"/>
 			<arg line="-storetype pkcs12"/>
 			<arg line="-keystore ${cert}" />
@@ -93,24 +93,29 @@
 			<arg value="${app.name}.swf"/>
 			<arg value="assets"/>
 		</exec>
+		
+		<echo message="Copying Desktop App to App Folder"/>
+		<copy file="${desktop.collect}/${app.name}.air" todir="${build.dir}/APPS" preservelastmodified="true" />
 	</target>
 	
+	<!-- Android Steps -->
+	<target name="android" depends="android.compile, android.collect, android.package" description="All of the tasks needed to create an Android apk file." />
 	
-	<target name="android" depends="compile.device, android.collect, android.package" description="All of the tasks needed to create an Android apk file." />
+	<target name="android.compile" depends="device.compile" />
 	
 	<target name="android.collect">
 		<echo message="Creating Device Folder for Android"/>
-		<mkdir dir="${build.dir}/android"/>
+		<mkdir dir="${android.collect}"/>
 		<echo message="Copying SWF for Android"/>
-		<copy file="${device.swf}" todir="${build.dir}/android"  />
+		<copy file="${android.swf}" todir="${android.collect}"  />
 		<echo message="Copying Application Description File for Android"/>
-		<copy file="${dev.dir}/${app.name}-app.xml" todir="${build.dir}/android" preservelastmodified="true" />
+		<copy file="${dev.dir}/${app.name}-app.xml" todir="${android.collect}" preservelastmodified="true" />
 		<echo message="Modifying Application Description File"/>
-		<replace file="${build.dir}/android/${app.name}-app.xml">
+		<replace file="${android.collect}/${app.name}-app.xml">
 			<replacefilter token="${contentText}" value="${app.name}.swf" />
 		</replace>
 		<echo message="Copying Assets for Android"/>
-		<copy todir="${build.dir}/android/assets" preservelastmodified="true">
+		<copy todir="${android.collect}/assets" preservelastmodified="true">
 			<fileset dir="${dev.dir}/assets">
 				<exclude name='.gitignore'/>
 				<exclude name='**/.DS_Store'/>
@@ -118,9 +123,9 @@
 		</copy>
 	</target>
 
-	<target name="android.package">
+	<target name="android.package"  depends="createAppStore">
 		<echo message="Packaging for Android"/>
-		<exec executable="${ADT}" dir="${build.dir}/android">
+		<exec executable="${ADT}" dir="${android.collect}">
 			<arg value="-package"/>
 			<arg line="-target apk"/>
 			<arg line="-storetype pkcs12"/>
@@ -131,23 +136,30 @@
 			<arg value="${app.name}.swf"/>
 			<arg value="assets"/>
 		</exec>
+		
+		<echo message="Copying Android App to App Folder"/>
+		<copy file="${android.collect}/${app.name}.apk" todir="${build.dir}/APPS" preservelastmodified="true" />
+		
 	</target>
 	
-	<target name="ios" depends="compile.device, ios.collect, ios.package" description="All of the tasks needed to create an IOS IPA file." />
+	<!-- IOS Steps -->
+	<target name="ios" depends="ios.compile, ios.collect, ios.package" description="All of the tasks needed to create an IOS IPA file." />
+	
+	<target name="ios.compile" depends="device.compile" />
 	
 	<target name="ios.collect">
 		<echo message="Creating Device Folder for IOS"/>
-		<mkdir dir="${build.dir}/IOS"/>
+		<mkdir dir="${ios.collect}"/>
 		<echo message="Copying SWF for IOS"/>
-		<copy file="${device.swf}" todir="${build.dir}/IOS"  />
+		<copy file="${ios.swf}" todir="${ios.collect}"  />
 		<echo message="Copying Application Description File for IOS"/>
-		<copy file="${dev.dir}/${app.name}-app.xml" todir="${build.dir}/IOS" preservelastmodified="true" />
+		<copy file="${dev.dir}/${app.name}-app.xml" todir="${ios.collect}" preservelastmodified="true" />
 		<echo message="Modifying Application Description File"/>
-		<replace file="${build.dir}/IOS/${app.name}-app.xml">
+		<replace file="${ios.collect}/${app.name}-app.xml">
 			<replacefilter token="${contentText}" value="${app.name}.swf" />
 		</replace>
 		<echo message="Copying Assets for IOS"/>
-		<copy todir="${build.dir}/IOS/assets" preservelastmodified="true">
+		<copy todir="${ios.collect}/assets" preservelastmodified="true">
 			<fileset dir="${dev.dir}/assets">
 				<exclude name='.gitignore'/>
 				<exclude name='**/.DS_Store'/>
@@ -155,9 +167,9 @@
 		</copy>
 	</target>
 	
-	<target name="ios.package">
+	<target name="ios.package" depends="createAppStore">
 		<echo message="Packaging for IOS"/>
-		<exec executable="${ADT}" dir="${build.dir}/IOS">
+		<exec executable="${ADT}" dir="${ios.collect}">
 			<arg value="-package"/>
 			<arg line="-target ipa-ad-hoc "/>
 			<arg line="-storetype pkcs12 "/>
@@ -169,20 +181,77 @@
 			<arg value="${app.name}.swf"/>
 			<arg value="assets"/>
 		</exec>
+		
+		<echo message="Copying IOS App to App Folder"/>
+		<copy file="${ios.collect}/${app.name}.ipa" todir="${build.dir}/APPS" preservelastmodified="true" />
+		
 	</target>
 	
+	<!-- BlackBerry Steps -->
+	<target name="blackberry" depends="blackberry.compile, blackberry.collect, blackberry.package" description="All of the tasks needed to create an BlackBerry BAR file." />
+	
+	<target name="blackberry.compile" depends="clean">
+		<echo message="Creating BlackBerry Folder"/>
+		<mkdir dir="${bb.build}"/>
+		<echo message="Compiling swf for BlackBerry devices"/>
+		<mxmlc file="${projectFile}" output="${bb.swf}"> 
+	        <load-config filename="${FLEX_HOME.bb}/frameworks/airmobile-config.xml"/> 
+	        <source-path path-element="${FLEX_HOME.bb}/frameworks"/>
+			<static-link-runtime-shared-libraries />
+			
+			<compiler.library-path dir="${FLEX_HOME.bb}/frameworks" append="true">
+                <include name="libs/*" />
+            </compiler.library-path>
+		</mxmlc>
+		
+    </target>
+	
+	<target name="blackberry.collect">
+		<echo message="Creating Collection Folder for BlackBerry"/>
+		<mkdir dir="${bb.collect}"/>
+		<echo message="Copying SWF for BlackBerry"/>
+		<copy file="${bb.swf}" todir="${bb.collect}"  />
+		<echo message="Copying Application Description File for BlackBerry"/>
+		<copy file="${dev.dir}/${app.name}-app.bb.xml" todir="${bb.collect}" preservelastmodified="true" />
+		<echo message="Modifying Application Description File"/>
+		<replace file="${bb.collect}/${app.name}-app.bb.xml">
+			<replacefilter token="${contentText}" value="${app.name}.swf" />
+		</replace>
+		<echo message="Copying Assets for BlackBerry"/>
+		<copy todir="${bb.collect}/assets" preservelastmodified="true">
+			<fileset dir="${dev.dir}/assets">
+				<exclude name='.gitignore'/>
+				<exclude name='**/.DS_Store'/>
+			</fileset>	
+		</copy>
+	</target>
+	
+	<target name="blackberry.package"  depends="createAppStore">
+		<echo message="Packaging for BlackBerry"/>
+		<exec executable="${bb.packager}" dir="${bb.collect}">
+			<arg value="-package"/>
+			<arg value="${app.name}.bar"/>
+			<arg value="${app.name}-app.bb.xml"/>
+			<arg value="${app.name}.swf"/>
+		</exec>
+		
+		<echo message="Copying BlackBerry App to App Folder"/>
+		<copy file="${bb.collect}/${app.name}.bar" todir="${build.dir}/APPS" preservelastmodified="true" />
+	</target>
+	
+	<!-- Development tasks. -->
 	<target name="android.install">
 		<echo message="Installing onto attached Android Device"/>
 		<exec executable="${ADB}">
 			<arg value="install"/>
 			<arg value="-r"/>
-			<arg value="${build.dir}/android/${app.name}.apk"/>
+			<arg value="${android.collect}/${app.name}.apk"/>
 		</exec>	
 	</target>
 	
-	<target name="desktop.debug" depends="compile.desktop,desktop.collect">
+	<target name="desktop.debug" depends="desktop.compile,desktop.collect">
 		<echo message="Debugging on Desktop"/>
-		<exec executable="${ADL}" dir="${build.dir}/desktop">
+		<exec executable="${ADL}" dir="${desktop.collect}">
 			<arg value="${app.name}-app.xml"/>
 		</exec>
 	</target>
