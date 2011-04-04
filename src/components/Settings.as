@@ -5,8 +5,14 @@ package components
 	import flash.display.SpreadMethod;
 	import flash.display.Sprite;
 	import flash.events.Event;
+	import flash.events.FocusEvent;
 	import flash.events.MouseEvent;
 	import flash.geom.Matrix;
+	import flash.text.TextField;
+	import flash.text.TextFormat;
+	
+	import flashx.textLayout.formats.TextAlign;
+	
 	
 	[Event(name="settingChanged", type="flash.events.Event")]
 	
@@ -18,6 +24,10 @@ package components
 		protected var _settingHeight:int;
 		protected var hostname:Hostname = new Hostname();
 		public var textBox:SettingTextBox = new SettingTextBox();
+		protected var message:TextField = new TextField();
+		private var FONTFACE:String = "Droid Sans";
+		
+		
 		
 		public function Settings(settingWidth:int,settingHeight:int)
 		{
@@ -27,6 +37,7 @@ package components
 			
 			drawBG();
 			textBox.textValue = hostname.name;
+			textBox.addEventListener(FocusEvent.FOCUS_IN,clearMessage);
 			addChild(textBox);
 			
 			
@@ -42,19 +53,34 @@ package components
 			closeButton.addEventListener(MouseEvent.CLICK, close);
 			addChild(closeButton);
 			
+			
+			message.x = 10;
+			message.width = 250;
+			message.y = saveButton.y + saveButton.height + 10;
+			message.defaultTextFormat = new TextFormat( FONTFACE, 16, 0x000000, true, null, null, null, null, TextAlign.LEFT );
+			addChild(message);
+			
+			
+		}
+		
+		protected function clearMessage(event:FocusEvent):void
+		{
+			message.text = "";
+			
 		}
 		
 		protected function saveHostname(event:MouseEvent):void
 		{
 			hostname.name = textBox.textValue;
 			hostname.save();
-			dispatchEvent(new Event("settingChanged")); 
+			dispatchEvent(new Event("settingChanged"));
+			message.text = "Tivo Info Saved";
 			
 		}
 		
 		protected function close(event:MouseEvent):void
 		{
-			this.x = _settingWidth;
+			parent.removeChild(this);
 			
 		}		
 		

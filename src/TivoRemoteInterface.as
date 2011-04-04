@@ -62,6 +62,10 @@ package
 		{
 			super();
 			
+			trace(stage.stageWidth);
+			trace(stage.fullScreenWidth);
+			
+			
 			if (stage.fullScreenWidth > 1024){
 				deviceScreenWidth = 270;
 			}
@@ -110,13 +114,6 @@ package
 			drawChannelPad();
 			drawThumbsPad();
 			
-			
-			settings = new Settings(stage.fullScreenWidth,stage.fullScreenHeight);
-			settings.x = stage.fullScreenWidth;
-			settings.addEventListener("settingChanged",reloadTivoRemote); 
-			addChild(settings);
-			
-			
 			var hostname:Hostname = new Hostname();
 			
 			tivoRemote = new TivoRemote(hostname.name);
@@ -125,9 +122,6 @@ package
 				openSettings(null);
 				
 			}
-			
-			//tivoRemote = new TivoRemote("10.0.1.191");
-			
 				
 		}
 		
@@ -140,7 +134,9 @@ package
 		
 		protected function openSettings(event:MouseEvent):void
 		{
-			settings.x = 0;
+			settings = new Settings(stage.fullScreenWidth,stage.fullScreenHeight);
+			settings.addEventListener("settingChanged",reloadTivoRemote); 
+			addChild(settings);
 			
 		}		
 		
