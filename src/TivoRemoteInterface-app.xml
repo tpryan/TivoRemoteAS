@@ -232,6 +232,8 @@
 			    <uses-permission name="android.permission.ACCESS_WIFI_STATE"/>
 			</manifest>
 			
+
+			
 		]]></manifestAdditions>
     </android>
 </application>

@@ -70,10 +70,10 @@
 		<!-- <resizable></resizable> -->
 
 		<!-- The window's initial width in pixels. Optional. -->
-		<width>270</width>
+		<!--<width>270</width>-->
 
 		<!-- The window's initial height in pixels. Optional. -->
-		<height>500</height>
+		<!--<height>500</height>-->
 
 		<!-- The window's initial x position. Optional. -->
 		<!-- <x></x> -->
@@ -89,7 +89,8 @@
 
 		<!-- Whether or not to pan when a soft keyboard is raised or lowered (either "pan" or "none").  Optional.  Defaults "pan." -->
 		<!-- <softKeyboardBehavior></softKeyboardBehavior> -->
-	<autoOrients>true</autoOrients>
+		<autoOrients>false</autoOrients>
+		<aspectRatio>portrait</aspectRatio>
         <fullScreen>true</fullScreen>
         <visible>true</visible>
     </initialWindow>
